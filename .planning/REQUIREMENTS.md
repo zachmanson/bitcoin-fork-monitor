@@ -15,7 +15,7 @@
 
 - [ ] **BACK-01**: On first run, system backfills complete historical fork/orphan data from genesis via mempool.space API
 - [ ] **BACK-02**: Backfill progress is checkpointed to SQLite so a restart resumes where it left off rather than restarting from scratch
-- [ ] **BACK-03**: Backfill implements adaptive rate limiting and exponential backoff to avoid being blocked by mempool.space
+- [x] **BACK-03**: Backfill implements adaptive rate limiting and exponential backoff to avoid being blocked by mempool.space
 
 ### Live Monitoring
 
@@ -67,7 +67,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DATA-03 | Phase 1 | Complete |
 | BACK-01 | Phase 2 | Pending |
 | BACK-02 | Phase 2 | Pending |
-| BACK-03 | Phase 2 | Pending |
+| BACK-03 | Phase 2 | Complete |
 | MONI-01 | Phase 3 | Pending |
 | MONI-02 | Phase 3 | Pending |
 | MONI-03 | Phase 3 | Pending |

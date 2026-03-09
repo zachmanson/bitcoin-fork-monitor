@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: planning
-stopped_at: Phase 2 context gathered
-last_updated: "2026-03-09T19:06:31.856Z"
+stopped_at: Completed 02-api-client-backfill/02-01-PLAN.md
+last_updated: "2026-03-09T19:34:08.068Z"
 last_activity: 2026-03-09 — Roadmap created
 progress:
   total_phases: 5
   completed_phases: 1
-  total_plans: 2
-  completed_plans: 2
+  total_plans: 4
+  completed_plans: 3
   percent: 0
 ---
 
@@ -52,6 +52,7 @@ Progress: [░░░░░░░░░░] 0%
 *Updated after each plan completion*
 | Phase 01-data-foundation P02 | 2 | 1 tasks | 2 files |
 | Phase 01-data-foundation P01 | 3 | 2 tasks | 8 files |
+| Phase 02-api-client-backfill P01 | 2m | 1 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -68,6 +69,8 @@ Recent decisions affecting current work:
 - [Phase 01-01]: Block.hash is the primary key — two blocks at same height with different hashes must both persist to represent a fork
 - [Phase 01-01]: ForkEvent hashes stored as plain strings (no FK enforcement) — SQLite requires PRAGMA foreign_keys=ON which is off by default
 - [Phase 01-01]: pyproject.toml created manually (uv unavailable); pip install used for sqlmodel, fastapi, pytest
+- [Phase 02-api-client-backfill]: time.sleep only inside retry loop; inter-page throttle belongs to backfill worker, not API client
+- [Phase 02-api-client-backfill]: RETRY_DELAYS list is single source of truth for backoff schedule (5 entries = 5 total attempts)
 
 ### Pending Todos
 
@@ -81,6 +84,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-09T19:06:31.802Z
-Stopped at: Phase 2 context gathered
-Resume file: .planning/phases/02-api-client-backfill/02-CONTEXT.md
+Last session: 2026-03-09T19:34:08.066Z
+Stopped at: Completed 02-api-client-backfill/02-01-PLAN.md
+Resume file: None
