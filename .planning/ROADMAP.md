@@ -59,11 +59,11 @@ Plans:
   2. If the WebSocket connection drops and reconnects, the system gap-fills by fetching all missed blocks via REST before resuming WebSocket — no fork events are silently skipped
   3. If the WebSocket is completely unavailable, the system falls back to REST polling on a configurable interval and continues detecting forks
   4. Fork resolution time (seconds between competing blocks) is recorded in each fork_event row
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 03-01: Fork Detector module (height-collision detection, fork_events writes, resolution time)
-- [ ] 03-02: Poller with WebSocket subscription, REST fallback, and gap-fill on reconnect
+- [ ] 03-01-PLAN.md — fetch_block_status in api_client + fork_detector.py pure functions + test suite (MONI-02)
+- [ ] 03-02-PLAN.md — monitor.py WebSocket loop + REST fallback + gap-fill + main.py lifespan wiring (MONI-01, MONI-03)
 
 ### Phase 4: Backend API + SSE Server
 **Goal**: A FastAPI server exposes block and fork data via REST endpoints and pushes real-time updates to browser clients via Server-Sent Events
