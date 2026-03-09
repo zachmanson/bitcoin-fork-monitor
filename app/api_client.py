@@ -140,3 +140,78 @@ def fetch_blocks_page(start_height: int) -> list[dict]:
                 continue
 
     raise RuntimeError(f"All retries exhausted for height {start_height}")
+
+
+def fetch_block_status(block_hash: str) -> dict:
+    """
+    Fetch the chain-status of a specific block from mempool.space.
+
+    Endpoint: GET /api/block/<block_hash>/status
+    Returns a JSON dict describing where this block sits in the chain.
+    The key field callers care about is ``in_best_chain`` (bool): True if the
+    block is part of the current best chain, False if it was orphaned/reorged.
+    The dict may also contain ``next_best`` (str | None) — the hash of the next
+    block in the best chain if this block was orphaned.
+
+    This function is called by the live monitor to confirm which of two
+    competing blocks at the same height survived. It uses the same retry/backoff
+    logic as the other fetch functions so transient network failures are handled
+    uniformly across the codebase.
+
+    Retry behavior:
+        - 429 or 5xx responses: log warning, sleep(delay), retry
+        - httpx.RequestError (network failure): log warning, sleep(delay), retry
+        - After all 5 attempts fail: raise RuntimeError
+
+    Note: time.sleep is only called between retry attempts. A successful
+    first-attempt call sleeps zero times inside this function. Inter-call
+    throttling (REQUEST_THROTTLE_SECONDS) is applied by the caller if needed.
+
+    Args:
+        block_hash: The hex-encoded block hash to look up.
+
+    Returns:
+        A dict with at minimum ``in_best_chain`` (bool). Example:
+        ``{"in_best_chain": false, "next_best": "000000...abc"}``
+
+    Raises:
+        RuntimeError: If all retry attempts are exhausted without success.
+    """
+    url = f"{BASE_URL}/api/block/{block_hash}/status"
+
+    with httpx.Client(timeout=30.0) as client:
+        for attempt, delay in enumerate(RETRY_DELAYS):
+            is_last_attempt = attempt == len(RETRY_DELAYS) - 1
+
+            try:
+                resp = client.get(url)
+
+                if resp.status_code in _RETRYABLE_STATUS_CODES:
+                    logger.warning(
+                        "Retryable HTTP %d fetching block status for %s (attempt %d/%d). "
+                        "Sleeping %ds.",
+                        resp.status_code,
+                        block_hash,
+                        attempt + 1,
+                        len(RETRY_DELAYS),
+                        delay,
+                    )
+                    time.sleep(delay)
+                    continue
+
+                resp.raise_for_status()
+                return resp.json()
+
+            except httpx.RequestError as exc:
+                logger.warning(
+                    "Network error fetching block status for %s (attempt %d/%d): %s",
+                    block_hash,
+                    attempt + 1,
+                    len(RETRY_DELAYS),
+                    exc,
+                )
+                if not is_last_attempt:
+                    time.sleep(delay)
+                continue
+
+    raise RuntimeError(f"All retries exhausted fetching block status for {block_hash}")
