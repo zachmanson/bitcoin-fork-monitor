@@ -19,9 +19,9 @@
 
 ### Live Monitoring
 
-- [ ] **MONI-01**: System subscribes to new Bitcoin blocks in real-time via mempool.space WebSocket API
+- [x] **MONI-01**: System subscribes to new Bitcoin blocks in real-time via mempool.space WebSocket API
 - [x] **MONI-02**: System detects temporary forks when competing blocks appear at the same height and records orphaned blocks
-- [ ] **MONI-03**: System falls back to REST polling if WebSocket is unavailable and performs gap-fill on reconnect to avoid missed forks
+- [x] **MONI-03**: System falls back to REST polling if WebSocket is unavailable and performs gap-fill on reconnect to avoid missed forks
 
 ### Dashboard
 
@@ -68,9 +68,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | BACK-01 | Phase 2 | Complete |
 | BACK-02 | Phase 2 | Complete |
 | BACK-03 | Phase 2 | Complete |
-| MONI-01 | Phase 3 | Pending |
+| MONI-01 | Phase 3 | Complete |
 | MONI-02 | Phase 3 | Complete |
-| MONI-03 | Phase 3 | Pending |
+| MONI-03 | Phase 3 | Complete |
 | DASH-01 | Phase 5 | Pending |
 | DASH-02 | Phase 4 | Pending |
 | DASH-03 | Phase 5 | Pending |

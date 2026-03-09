@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: planning
-stopped_at: Completed 03-01-PLAN.md — fork detection foundation
-last_updated: "2026-03-09T22:14:04.365Z"
+stopped_at: Completed 03-02-PLAN.md — live monitoring thread
+last_updated: "2026-03-09T22:27:44.744Z"
 last_activity: 2026-03-09 — Roadmap created
 progress:
   total_phases: 5
-  completed_phases: 2
+  completed_phases: 3
   total_plans: 6
-  completed_plans: 5
+  completed_plans: 6
   percent: 0
 ---
 
@@ -55,6 +55,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 02-api-client-backfill P01 | 2m | 1 tasks | 2 files |
 | Phase 02-api-client-backfill P02 | 3m | 2 tasks | 3 files |
 | Phase 03-fork-detection-live-monitoring P01 | 4m | 2 tasks | 3 files |
+| Phase 03-fork-detection-live-monitoring P02 | 8m | 3 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -79,6 +80,9 @@ Recent decisions affecting current work:
 - [Phase 03-fork-detection-live-monitoring]: write_fork_event idempotency key is (height, canonical_hash, orphaned_hash) — no composite DB constraint needed
 - [Phase 03-fork-detection-live-monitoring]: fork_detector.py is pure — no api_client import — monitor decides canonical/orphaned before calling write_fork_event
 - [Phase 03-fork-detection-live-monitoring]: resolution_seconds uses abs() — orphaned blocks can have later header timestamps due to miner timestamp window
+- [Phase 03-fork-detection-live-monitoring]: websockets.sync.client used instead of async — monitor runs in background thread without FastAPI event loop access
+- [Phase 03-fork-detection-live-monitoring]: pending_resolutions uses mutable list passed by reference — shared across _process_block calls within one monitor session lifecycle
+- [Phase 03-fork-detection-live-monitoring]: monitor_thread always starts in lifespan; _wait_for_backfill() gates internally so main.py does not need to know backfill status
 
 ### Pending Todos
 
@@ -92,6 +96,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-09T22:14:04.362Z
-Stopped at: Completed 03-01-PLAN.md — fork detection foundation
+Last session: 2026-03-09T22:27:44.741Z
+Stopped at: Completed 03-02-PLAN.md — live monitoring thread
 Resume file: None
