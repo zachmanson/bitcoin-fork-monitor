@@ -12,6 +12,40 @@ from sqlmodel import SQLModel, Session, create_engine
 from sqlalchemy.pool import StaticPool
 
 
+def _make_test_engine():
+    """
+    Create a fresh in-memory SQLite engine with all tables created.
+
+    Using StaticPool is required for in-memory SQLite: without it, each new
+    Session() call would open a new connection and see an empty database.
+    With StaticPool, all connections share the same in-memory instance.
+    """
+    # Import models so SQLModel.metadata knows about our tables before create_all
+    from app import models  # noqa: F401
+
+    engine = create_engine(
+        "sqlite://",
+        connect_args={"check_same_thread": False},
+        poolclass=StaticPool,
+    )
+    SQLModel.metadata.create_all(engine)
+    return engine
+
+
+@pytest.fixture(name="engine")
+def engine_fixture():
+    """
+    Provide a fresh in-memory SQLite engine for a single test.
+
+    Useful for tests that need to create their own Session objects (e.g.,
+    background worker tests where the worker opens its own session internally).
+
+    Yields:
+        Engine: A SQLModel engine backed by an in-memory SQLite database.
+    """
+    yield _make_test_engine()
+
+
 @pytest.fixture(name="session")
 def session_fixture():
     """
@@ -24,20 +58,7 @@ def session_fixture():
     Yields:
         Session: A SQLModel session backed by an in-memory SQLite database.
     """
-    # StaticPool reuses the same connection for all requests to this engine.
-    # This is required for in-memory SQLite because each new connection gets
-    # its own isolated database — without StaticPool, the session would see
-    # an empty database even after create_all() ran on the engine.
-    engine = create_engine(
-        "sqlite://",
-        connect_args={"check_same_thread": False},
-        poolclass=StaticPool,
-    )
-
-    # Import models so SQLModel.metadata knows about our tables before create_all
-    from app import models  # noqa: F401
-
-    SQLModel.metadata.create_all(engine)
+    engine = _make_test_engine()
 
     with Session(engine) as session:
         yield session
