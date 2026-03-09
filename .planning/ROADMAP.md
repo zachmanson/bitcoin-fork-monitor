@@ -44,11 +44,11 @@ Plans:
   2. Killing and restarting the app mid-backfill resumes from the last checkpointed height rather than restarting from genesis
   3. The API client enforces at least 500ms between requests and applies exponential backoff on HTTP 429 responses — no IP ban during development
   4. After backfill completes, the sync_state table records a "backfill complete" marker and the worker does not run again on subsequent starts
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 02-01: mempool.space REST + WebSocket API client with rate limiting and backoff
-- [ ] 02-02: Backfill worker with sync_state checkpoint/resume logic
+- [ ] 02-01-PLAN.md — mempool.space HTTP client (fetch_blocks_page) with retry/backoff + 8 unit tests covering BACK-03
+- [ ] 02-02-PLAN.md — Backfill worker (run_backfill, checkpointing) + FastAPI lifespan entrypoint + 5 unit tests covering BACK-01, BACK-02
 
 ### Phase 3: Fork Detection + Live Monitoring
 **Goal**: The system detects Bitcoin temporary forks in real-time as competing blocks arrive at the same height, records orphaned blocks, and never silently misses a fork event across WebSocket disconnects
