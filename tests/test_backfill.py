@@ -65,19 +65,10 @@ class TestBackfillWritesBlocks:
         page1 = _make_page(list(range(14, -1, -1)))    # heights 14..0 (descending)
         page2 = _make_page(list(range(29, 14, -1)))    # heights 29..15 (descending)
 
-        # The first call is the tip-detection probe (fetch_blocks_page(999_999_999)).
-        # We tell it the tip is at height 29. Then we expect two real page calls.
-        tip_page = _make_page(list(range(29, 14, -1)))  # tip page tells us tip is 29
-
-        call_responses = [
-            tip_page,  # probe call → tip = 29
-            page1,     # fetch heights 0-14
-            page2,     # fetch heights 15-29
-        ]
-
         from app.backfill import _do_backfill
 
-        with patch("app.backfill.fetch_blocks_page", side_effect=call_responses) as mock_fetch, \
+        with patch("app.backfill.fetch_tip_height", return_value=29), \
+             patch("app.backfill.fetch_blocks_page", side_effect=[page1, page2]) as mock_fetch, \
              patch("app.backfill.time.sleep"):
             _do_backfill(engine=engine)
 
@@ -116,9 +107,8 @@ class TestBackfillDetectsFork:
 
         from app.backfill import _do_backfill
 
-        # Two calls: tip probe (returns single_page, tip=820819) + one content page.
-        # After the content page, current_height = 820819+15 = 820834 > tip, loop exits.
-        with patch("app.backfill.fetch_blocks_page", side_effect=[single_page, single_page]), \
+        with patch("app.backfill.fetch_tip_height", return_value=820819), \
+             patch("app.backfill.fetch_blocks_page", side_effect=[single_page]), \
              patch("app.backfill.time.sleep"):
             _do_backfill(engine=engine)
 
@@ -151,10 +141,12 @@ class TestBackfillSkipsIfComplete:
 
         from app.backfill import _do_backfill
 
-        with patch("app.backfill.fetch_blocks_page") as mock_fetch, \
+        with patch("app.backfill.fetch_tip_height") as mock_tip, \
+             patch("app.backfill.fetch_blocks_page") as mock_fetch, \
              patch("app.backfill.time.sleep"):
             _do_backfill(engine=engine)
 
+        mock_tip.assert_not_called()
         mock_fetch.assert_not_called()
 
 
@@ -172,33 +164,23 @@ class TestBackfillResumesFromCheckpoint:
             session.add(state)
             session.commit()
 
-        # Tip is at height 200; we also need pages for the resume window
-        tip_page = _make_page(list(range(200, 185, -1)))  # tip probe returns tip=200
-
         # After resume from 100: current_height=100, page_top=114, then 115..129, etc.
         # Enough pages to reach 200
         pages = [_make_page(list(range(min(h + 14, 200), h - 1, -1))) for h in range(100, 201, 15)]
 
-        call_responses = [tip_page] + pages
-
         from app.backfill import _do_backfill
 
-        with patch("app.backfill.fetch_blocks_page", side_effect=call_responses) as mock_fetch, \
+        with patch("app.backfill.fetch_tip_height", return_value=200), \
+             patch("app.backfill.fetch_blocks_page", side_effect=pages) as mock_fetch, \
              patch("app.backfill.time.sleep"):
             _do_backfill(engine=engine)
 
-        # The first real page call (after the tip probe) should use page_top = 100 + 14 = 114
-        assert mock_fetch.call_count >= 2, "Should call fetch_blocks_page at least for tip + one page"
+        assert mock_fetch.call_count >= 1, "Should call fetch_blocks_page at least once"
 
-        # Extract the heights passed to each fetch call
+        # First page call should use page_top = 100 + 14 = 114 (resume from checkpoint)
         called_heights = [c.args[0] for c in mock_fetch.call_args_list]
-
-        # First call is tip probe (999_999_999)
-        assert called_heights[0] == 999_999_999, "First call should be tip probe"
-
-        # Second call should be at 100 + 14 = 114 (first page from checkpoint)
-        assert called_heights[1] == 114, (
-            f"Expected first resume page to start at height 114, got {called_heights[1]}"
+        assert called_heights[0] == 114, (
+            f"Expected first resume page to start at height 114, got {called_heights[0]}"
         )
 
 
@@ -218,12 +200,10 @@ class TestCheckpointFrequency:
             end = min(start + 15, tip_height + 1)
             page_data.append(_make_page(list(range(end - 1, start - 1, -1))))
 
-        tip_page = _make_page(list(range(tip_height, max(tip_height - 15, -1), -1)))
-        call_responses = [tip_page] + page_data
-
         from app.backfill import _do_backfill
 
-        with patch("app.backfill.fetch_blocks_page", side_effect=call_responses), \
+        with patch("app.backfill.fetch_tip_height", return_value=tip_height), \
+             patch("app.backfill.fetch_blocks_page", side_effect=page_data), \
              patch("app.backfill.time.sleep"):
             _do_backfill(engine=engine)
 
@@ -266,9 +246,8 @@ class TestCheckpointFrequency:
             session.add(state)
             session.commit()
 
-        call_responses2 = [tip_page] + page_data
-
-        with patch("app.backfill.fetch_blocks_page", side_effect=call_responses2), \
+        with patch("app.backfill.fetch_tip_height", return_value=tip_height), \
+             patch("app.backfill.fetch_blocks_page", side_effect=list(page_data)), \
              patch("app.backfill.time.sleep"), \
              patch("app.backfill.write_checkpoint", side_effect=spy_checkpoint):
             _do_backfill(engine=fresh_engine)

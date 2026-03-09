@@ -23,7 +23,7 @@ from datetime import datetime, timezone
 
 from sqlmodel import Session, select
 
-from app.api_client import fetch_blocks_page
+from app.api_client import fetch_blocks_page, fetch_tip_height
 from app.database import engine as _module_engine
 from app.models import Block, ForkEvent, SyncState
 
@@ -98,10 +98,10 @@ def _do_backfill(engine=None) -> None:
             return
 
         # --- Step 3: Detect current chain tip ---
-        # Passing a height larger than the chain tip causes mempool.space to return
-        # the most recent blocks. blocks[0]["height"] is the current tip.
-        first_page = fetch_blocks_page(999_999_999)
-        tip_height = first_page[0]["height"]
+        # /api/blocks/tip/height returns the current tip as a plain integer.
+        # We can't infer tip from a page request because mempool.space returns
+        # an empty list for heights beyond the actual tip.
+        tip_height = fetch_tip_height()
 
         logger.info(
             "Backfill starting from height %d to tip %d",
