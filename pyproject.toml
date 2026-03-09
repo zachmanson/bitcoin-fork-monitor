@@ -1,0 +1,17 @@
+[project]
+name = "bitcoin-fork-monitor"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = [
+    "sqlmodel>=0.0.21",
+    "fastapi>=0.115.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-x -q"
