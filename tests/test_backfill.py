@@ -106,8 +106,18 @@ class TestBackfillDetectsFork:
         # One page containing a block with an orphan; tip is that block's height.
         single_page = [fork_block]
 
+        # Pre-populate SyncState so the backfill starts right at the fork block's height.
+        # Without this, last_synced_height defaults to 0 and the loop would need ~54,000
+        # pages to reach height 820819 — far more mocked responses than we provide.
+        with Session(engine) as session:
+            state = SyncState(backfill_complete=False, last_synced_height=820819)
+            session.add(state)
+            session.commit()
+
         from app.backfill import _do_backfill
 
+        # Two calls: tip probe (returns single_page, tip=820819) + one content page.
+        # After the content page, current_height = 820819+15 = 820834 > tip, loop exits.
         with patch("app.backfill.fetch_blocks_page", side_effect=[single_page, single_page]), \
              patch("app.backfill.time.sleep"):
             _do_backfill(engine=engine)
