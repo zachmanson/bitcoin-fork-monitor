@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: planning
-stopped_at: Phase 3 context gathered
-last_updated: "2026-03-09T21:49:42.485Z"
+stopped_at: Completed 03-01-PLAN.md — fork detection foundation
+last_updated: "2026-03-09T22:14:04.365Z"
 last_activity: 2026-03-09 — Roadmap created
 progress:
   total_phases: 5
   completed_phases: 2
-  total_plans: 4
-  completed_plans: 4
+  total_plans: 6
+  completed_plans: 5
   percent: 0
 ---
 
@@ -54,6 +54,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 01-data-foundation P01 | 3 | 2 tasks | 8 files |
 | Phase 02-api-client-backfill P01 | 2m | 1 tasks | 2 files |
 | Phase 02-api-client-backfill P02 | 3m | 2 tasks | 3 files |
+| Phase 03-fork-detection-live-monitoring P01 | 4m | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -74,6 +75,10 @@ Recent decisions affecting current work:
 - [Phase 02-api-client-backfill]: RETRY_DELAYS list is single source of truth for backoff schedule (5 entries = 5 total attempts)
 - [Phase 02-api-client-backfill]: Pre-populate SyncState in test_backfill_detects_fork so mock only needs 2 API calls instead of 54k+
 - [Phase 02-api-client-backfill]: daemon=True backfill thread with 5s join timeout ensures clean uvicorn shutdown without blocking
+- [Phase 03-fork-detection-live-monitoring]: fetch_block_status follows identical RETRY_DELAYS pattern as fetch_blocks_page — uniform network I/O across api_client module
+- [Phase 03-fork-detection-live-monitoring]: write_fork_event idempotency key is (height, canonical_hash, orphaned_hash) — no composite DB constraint needed
+- [Phase 03-fork-detection-live-monitoring]: fork_detector.py is pure — no api_client import — monitor decides canonical/orphaned before calling write_fork_event
+- [Phase 03-fork-detection-live-monitoring]: resolution_seconds uses abs() — orphaned blocks can have later header timestamps due to miner timestamp window
 
 ### Pending Todos
 
@@ -87,6 +92,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-09T21:49:42.482Z
-Stopped at: Phase 3 context gathered
-Resume file: .planning/phases/03-fork-detection-live-monitoring/03-CONTEXT.md
+Last session: 2026-03-09T22:14:04.362Z
+Stopped at: Completed 03-01-PLAN.md — fork detection foundation
+Resume file: None
