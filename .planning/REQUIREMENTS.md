@@ -9,7 +9,7 @@
 
 - [ ] **DATA-01**: System persists block and orphan event data in a local SQLite database that survives process restarts
 - [ ] **DATA-02**: Block hash is used as primary key for all block records (not block height) to prevent silent orphan record loss
-- [ ] **DATA-03**: Stale rate is calculated as `orphaned_blocks / (canonical_blocks + orphaned_blocks)` — formula is enforced at the data layer
+- [x] **DATA-03**: Stale rate is calculated as `orphaned_blocks / (canonical_blocks + orphaned_blocks)` — formula is enforced at the data layer
 
 ### Backfill
 
@@ -64,7 +64,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 |-------------|-------|--------|
 | DATA-01 | Phase 1 | Pending |
 | DATA-02 | Phase 1 | Pending |
-| DATA-03 | Phase 1 | Pending |
+| DATA-03 | Phase 1 | Complete |
 | BACK-01 | Phase 2 | Pending |
 | BACK-02 | Phase 2 | Pending |
 | BACK-03 | Phase 2 | Pending |

@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: planning
-stopped_at: Phase 1 context gathered
-last_updated: "2026-03-09T05:44:41.709Z"
+stopped_at: Completed 01-data-foundation-01-02-PLAN.md
+last_updated: "2026-03-09T16:53:02.752Z"
 last_activity: 2026-03-09 — Roadmap created
 progress:
   total_phases: 5
   completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
+  total_plans: 2
+  completed_plans: 1
   percent: 0
 ---
 
@@ -50,6 +50,7 @@ Progress: [░░░░░░░░░░] 0%
 - Trend: -
 
 *Updated after each plan completion*
+| Phase 01-data-foundation P02 | 2 | 1 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -61,6 +62,8 @@ Recent decisions affecting current work:
 - [Pre-phase]: Use mempool.space as primary data source (public, free, tracks historical orphans)
 - [Pre-phase]: Full history backfill on first run (data is tiny; complete stale rate is more meaningful)
 - [Pre-phase]: Single Node.js process with Fastify + SvelteKit SPA (no microservices)
+- [Phase 01-02]: Stale rate denominator is (canonical + orphaned) — total blocks seen, not just canonical
+- [Phase 01-02]: Return 0.0 on zero-zero input (fresh database is not an error); raise ValueError on negative counts (caller bug)
 
 ### Pending Todos
 
@@ -74,6 +77,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-09T05:44:41.696Z
-Stopped at: Phase 1 context gathered
-Resume file: .planning/phases/01-data-foundation/01-CONTEXT.md
+Last session: 2026-03-09T16:53:02.750Z
+Stopped at: Completed 01-data-foundation-01-02-PLAN.md
+Resume file: None
