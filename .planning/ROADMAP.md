@@ -12,28 +12,28 @@ Five phases that build strictly bottom-up: the SQLite schema is the foundation e
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Data Foundation** - SQLite schema, Drizzle migrations, and stale rate formula — the dependency everything else builds on
+- [ ] **Phase 1: Data Foundation** - SQLite schema, SQLModel ORM, and stale rate formula — the dependency everything else builds on
 - [ ] **Phase 2: API Client + Backfill** - Rate-limited mempool.space client and checkpointed full history backfill
 - [ ] **Phase 3: Fork Detection + Live Monitoring** - Height-collision fork detection, WebSocket poller with REST fallback, gap-fill on reconnect
-- [ ] **Phase 4: Backend API + SSE Server** - Fastify HTTP/SSE server exposing block and fork data with real-time push
+- [ ] **Phase 4: Backend API + SSE Server** - FastAPI HTTP/SSE server exposing block and fork data with real-time push
 - [ ] **Phase 5: Frontend Dashboard** - SvelteKit SPA with live block feed, fork event log, stale rate chart, and summary stats
 
 ## Phase Details
 
 ### Phase 1: Data Foundation
-**Goal**: The SQLite schema, Drizzle ORM configuration, and stale rate formula are in place — correct by construction, with block hash as primary key and a tested denominator definition
+**Goal**: The SQLite schema, SQLModel ORM configuration, and stale rate formula are in place — correct by construction, with block hash as primary key and a tested denominator definition
 **Depends on**: Nothing (first phase)
 **Requirements**: DATA-01, DATA-02, DATA-03
 **Success Criteria** (what must be TRUE):
-  1. Running the app from a fresh checkout creates a SQLite database file with the correct schema (blocks, fork_events, sync_state tables)
-  2. The blocks table uses block hash as its primary key — inserting two blocks at the same height creates two distinct rows without collision
+  1. Running the app from a fresh checkout creates a SQLite database file with the correct schema (block, forkevent, syncstate tables)
+  2. The block table uses block hash as its primary key — inserting two blocks at the same height creates two distinct rows without collision
   3. A unit test asserts the stale rate formula as `orphaned / (canonical + orphaned)` and fails if the denominator is changed
-  4. Drizzle migrations run idempotently — running them twice produces no error and no schema drift
-**Plans**: TBD
+  4. SQLModel create_all runs idempotently — running it twice produces no error and no schema drift
+**Plans**: 2 plans
 
 Plans:
-- [ ] 01-01: SQLite schema + Drizzle ORM setup (blocks, fork_events, sync_state tables)
-- [ ] 01-02: Stale rate formula definition and unit test
+- [ ] 01-01-PLAN.md — Python project setup + SQLModel schema (block, forkevent, syncstate tables) + test infrastructure
+- [ ] 01-02-PLAN.md — Stale rate formula (calculate_stale_rate) + TDD unit tests pinning the denominator
 
 ### Phase 2: API Client + Backfill
 **Goal**: Full Bitcoin blockchain history (all orphaned/stale blocks since genesis) is persisted in SQLite via a rate-limited, checkpointed backfill that can survive process restarts
@@ -66,7 +66,7 @@ Plans:
 - [ ] 03-02: Poller with WebSocket subscription, REST fallback, and gap-fill on reconnect
 
 ### Phase 4: Backend API + SSE Server
-**Goal**: A Fastify server exposes block and fork data via REST endpoints and pushes real-time updates to browser clients via Server-Sent Events
+**Goal**: A FastAPI server exposes block and fork data via REST endpoints and pushes real-time updates to browser clients via Server-Sent Events
 **Depends on**: Phase 3
 **Requirements**: DASH-02, DASH-04
 **Success Criteria** (what must be TRUE):
@@ -77,7 +77,7 @@ Plans:
 **Plans**: TBD
 
 Plans:
-- [ ] 04-01: Fastify server with REST endpoints (/api/stats, /api/forks, /api/blocks)
+- [ ] 04-01: FastAPI server with REST endpoints (/api/stats, /api/forks, /api/blocks)
 - [ ] 04-02: SSE endpoint (/api/events) with EventEmitter bus connecting poller to browser clients
 
 ### Phase 5: Frontend Dashboard
