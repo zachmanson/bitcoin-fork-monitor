@@ -38,6 +38,7 @@ from sqlmodel import Session, select
 from app.backfill import run_backfill
 from app.database import create_db_and_tables, engine
 from app.models import SyncState
+from app.monitor import run_monitor
 
 logger = logging.getLogger(__name__)
 
@@ -58,6 +59,11 @@ async def lifespan(app: FastAPI):
     # Ensure all SQLModel tables exist. Safe to call on every restart.
     create_db_and_tables()
 
+    # Initialize thread references to None so the shutdown block always has a
+    # valid reference, even if a thread was never launched (e.g., backfill skipped).
+    backfill_thread = None
+    monitor_thread = None
+
     # Check whether a previous run already completed the full history backfill.
     # We open and immediately close a session here — this is intentional.
     # The backfill thread owns its own session for the duration of its work.
@@ -67,7 +73,6 @@ async def lifespan(app: FastAPI):
 
     if already_done:
         logger.info("Backfill already complete — skipping thread launch")
-        backfill_thread = None
     else:
         logger.info("Starting backfill worker thread")
         backfill_thread = threading.Thread(
@@ -76,6 +81,18 @@ async def lifespan(app: FastAPI):
             name="backfill",   # visible in thread dumps and logs
         )
         backfill_thread.start()
+
+    # Always launch the monitor thread, regardless of whether backfill ran.
+    # The monitor gates on backfill_complete internally via _wait_for_backfill(),
+    # so main.py does not need to know whether backfill is in progress or done —
+    # the monitor will wait for the right moment to subscribe to the WebSocket.
+    logger.info("Starting monitor thread (waits for backfill internally)")
+    monitor_thread = threading.Thread(
+        target=run_monitor,
+        daemon=True,       # does not block process exit
+        name="monitor",    # visible in thread dumps and logs
+    )
+    monitor_thread.start()
 
     yield  # FastAPI serves requests here
 
@@ -87,6 +104,10 @@ async def lifespan(app: FastAPI):
     if backfill_thread is not None and backfill_thread.is_alive():
         logger.info("Waiting for backfill thread to finish (timeout=5s)...")
         backfill_thread.join(timeout=5.0)
+
+    if monitor_thread is not None and monitor_thread.is_alive():
+        logger.info("Waiting for monitor thread to finish (timeout=5s)...")
+        monitor_thread.join(timeout=5.0)
 
 
 app = FastAPI(title="Bitcoin Fork Monitor", lifespan=lifespan)
