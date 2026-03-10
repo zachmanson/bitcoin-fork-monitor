@@ -32,8 +32,8 @@
 
 ### Analytics
 
-- [ ] **ANAL-01**: User can view a stale rate over time chart aggregated by week or month
-- [ ] **ANAL-02**: User can view stale rate broken down by year or difficulty era, with a data confidence note for pre-2015 data
+- [x] **ANAL-01**: User can view a stale rate over time chart aggregated by week or month
+- [x] **ANAL-02**: User can view stale rate broken down by year or difficulty era, with a data confidence note for pre-2015 data
 - [ ] **ANAL-03**: Fork resolution time (seconds between competing blocks) is recorded and displayed per fork event in the event log
 
 ## v2 Requirements
@@ -75,8 +75,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DASH-02 | Phase 4 | Complete |
 | DASH-03 | Phase 5 | Pending |
 | DASH-04 | Phase 4 | Complete |
-| ANAL-01 | Phase 5 | Pending |
-| ANAL-02 | Phase 5 | Pending |
+| ANAL-01 | Phase 5 | Complete |
+| ANAL-02 | Phase 5 | Complete |
 | ANAL-03 | Phase 5 | Pending |
 
 **Coverage:**

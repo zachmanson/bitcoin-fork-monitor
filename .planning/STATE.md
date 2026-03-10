@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: planning
-stopped_at: Phase 5 context gathered
-last_updated: "2026-03-10T15:27:34.949Z"
+stopped_at: Completed 05-01-PLAN.md
+last_updated: "2026-03-10T16:12:12.343Z"
 last_activity: 2026-03-09 — Roadmap created
 progress:
   total_phases: 5
   completed_phases: 4
-  total_plans: 8
-  completed_plans: 8
+  total_plans: 12
+  completed_plans: 9
   percent: 0
 ---
 
@@ -58,6 +58,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 03-fork-detection-live-monitoring P02 | 8m | 3 tasks | 3 files |
 | Phase 04-backend-api-sse-server P01 | 5m | 2 tasks | 12 files |
 | Phase 04-backend-api-sse-server P02 | 25m | 1 tasks | 3 files |
+| Phase 05-frontend-dashboard P01 | 15m | 2 tasks | 10 files |
 
 ## Accumulated Context
 
@@ -90,6 +91,10 @@ Recent decisions affecting current work:
 - [Phase 04-backend-api-sse-server]: event_bus.set_loop() called before thread start in lifespan: the event loop must be captured before background threads begin or notify() would have a None loop reference
 - [Phase 04-backend-api-sse-server]: 1-second inner timeout in SSE generator: enables responsive disconnect detection while 15-cycle counter preserves 15-second keepalive SLA
 - [Phase 04-backend-api-sse-server]: SSE tests bypass TestClient.stream(): use OpenAPI schema + route registry for content-type, asyncio.run() with AsyncMock Request for disconnect cleanup
+- [Phase 05-frontend-dashboard]: 2016-block windows used as era boundaries — technically precise, matches difficulty adjustment cycle
+- [Phase 05-frontend-dashboard]: low_confidence flag for eras below height 321000 (pre-2015 orphan data less reliable)
+- [Phase 05-frontend-dashboard]: vite bumped from ^5 to ^6 to satisfy @sveltejs/vite-plugin-svelte peer dependency in SvelteKit 2.53.4
+- [Phase 05-frontend-dashboard]: src/app.html added (not in plan) — required SvelteKit root template
 
 ### Pending Todos
 
@@ -103,6 +108,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-10T15:27:34.946Z
-Stopped at: Phase 5 context gathered
-Resume file: .planning/phases/05-frontend-dashboard/05-CONTEXT.md
+Last session: 2026-03-10T16:12:12.340Z
+Stopped at: Completed 05-01-PLAN.md
+Resume file: None
