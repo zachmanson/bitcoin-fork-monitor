@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: planning
-stopped_at: Completed 03-02-PLAN.md — live monitoring thread
-last_updated: "2026-03-10T02:58:36.660Z"
+stopped_at: Completed 04-01-PLAN.md — REST endpoints + EventBus
+last_updated: "2026-03-10T03:47:42.110Z"
 last_activity: 2026-03-09 — Roadmap created
 progress:
   total_phases: 5
   completed_phases: 3
-  total_plans: 6
-  completed_plans: 6
+  total_plans: 8
+  completed_plans: 7
   percent: 0
 ---
 
@@ -56,6 +56,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 02-api-client-backfill P02 | 3m | 2 tasks | 3 files |
 | Phase 03-fork-detection-live-monitoring P01 | 4m | 2 tasks | 3 files |
 | Phase 03-fork-detection-live-monitoring P02 | 8m | 3 tasks | 3 files |
+| Phase 04-backend-api-sse-server P01 | 5m | 2 tasks | 12 files |
 
 ## Accumulated Context
 
@@ -83,6 +84,9 @@ Recent decisions affecting current work:
 - [Phase 03-fork-detection-live-monitoring]: websockets.sync.client used instead of async — monitor runs in background thread without FastAPI event loop access
 - [Phase 03-fork-detection-live-monitoring]: pending_resolutions uses mutable list passed by reference — shared across _process_block calls within one monitor session lifecycle
 - [Phase 03-fork-detection-live-monitoring]: monitor_thread always starts in lifespan; _wait_for_backfill() gates internally so main.py does not need to know backfill status
+- [Phase 04-backend-api-sse-server]: EventBus uses per-client asyncio.Queue: each SSE connection gets its own queue so a slow browser tab cannot steal events meant for other tabs
+- [Phase 04-backend-api-sse-server]: asyncio.run_coroutine_threadsafe is the only correct cross-thread queue API: asyncio.Queue is not thread-safe, direct put_nowait() from monitor thread would corrupt event loop state
+- [Phase 04-backend-api-sse-server]: event_bus.set_loop() called before thread start in lifespan: the event loop must be captured before background threads begin or notify() would have a None loop reference
 
 ### Pending Todos
 
@@ -96,6 +100,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-09T22:27:44.741Z
-Stopped at: Completed 03-02-PLAN.md — live monitoring thread
+Last session: 2026-03-10T03:47:42.107Z
+Stopped at: Completed 04-01-PLAN.md — REST endpoints + EventBus
 Resume file: None

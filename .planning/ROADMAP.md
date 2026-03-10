@@ -107,5 +107,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | 1. Data Foundation | 2/2 | Complete   | 2026-03-09 |
 | 2. API Client + Backfill | 2/2 | Complete   | 2026-03-09 |
 | 3. Fork Detection + Live Monitoring | 2/2 | Complete   | 2026-03-09 |
-| 4. Backend API + SSE Server | 0/2 | Not started | - |
+| 4. Backend API + SSE Server | 1/2 | In Progress|  |
 | 5. Frontend Dashboard | 0/3 | Not started | - |
