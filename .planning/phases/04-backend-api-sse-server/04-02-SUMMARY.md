@@ -56,7 +56,7 @@ completed: 2026-03-10
 - **Duration:** ~25 min
 - **Started:** 2026-03-10T03:50:00Z
 - **Completed:** 2026-03-10T04:15:00Z
-- **Tasks:** 1 (+ 1 checkpoint awaiting human verification)
+- **Tasks:** 2/2 (all complete, including human verification)
 - **Files modified:** 3
 
 ## Accomplishments
@@ -70,6 +70,7 @@ Each task was committed atomically:
 
 1. **Task 1 (TDD RED): Add failing SSE tests** - `6e57616` (test)
 2. **Task 1 (TDD GREEN): SSE endpoint + main.py update** - `90eddc2` (feat)
+3. **Task 2: Human verification checkpoint** - Approved 2026-03-10 (live server checks passed)
 
 _TDD task split: RED commit first with failing tests, GREEN commit with passing implementation._
 
@@ -119,8 +120,8 @@ None — no external service configuration required.
 
 ## Next Phase Readiness
 - Phase 4 backend is complete: FastAPI 0.135, EventBus, three REST endpoints (/api/stats, /api/forks, /api/blocks), SSE endpoint (/api/events), full test suite (61 tests green)
-- Awaiting human verification of live server behavior (Task 2 checkpoint)
-- After checkpoint approval: Phase 5 (frontend dashboard) can consume /api/events via browser EventSource API
+- Human verification passed: live server confirmed returning correct JSON from REST endpoints, SSE connection stays open and receives data: lines, OpenAPI docs show all four /api/* endpoints, clean shutdown on Ctrl+C
+- Phase 5 (frontend dashboard) can now consume /api/events via browser EventSource API
 
 ## Self-Check: PASSED
 
