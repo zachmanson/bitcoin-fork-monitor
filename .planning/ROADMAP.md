@@ -15,7 +15,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 1: Data Foundation** - SQLite schema, SQLModel ORM, and stale rate formula — the dependency everything else builds on (completed 2026-03-09)
 - [x] **Phase 2: API Client + Backfill** - Rate-limited mempool.space client and checkpointed full history backfill (completed 2026-03-09)
 - [x] **Phase 3: Fork Detection + Live Monitoring** - Height-collision fork detection, WebSocket poller with REST fallback, gap-fill on reconnect (completed 2026-03-09)
-- [ ] **Phase 4: Backend API + SSE Server** - FastAPI HTTP/SSE server exposing block and fork data with real-time push
+- [x] **Phase 4: Backend API + SSE Server** - FastAPI HTTP/SSE server exposing block and fork data with real-time push (completed 2026-03-10)
 - [ ] **Phase 5: Frontend Dashboard** - SvelteKit SPA with live block feed, fork event log, stale rate chart, and summary stats
 
 ## Phase Details
@@ -107,5 +107,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | 1. Data Foundation | 2/2 | Complete   | 2026-03-09 |
 | 2. API Client + Backfill | 2/2 | Complete   | 2026-03-09 |
 | 3. Fork Detection + Live Monitoring | 2/2 | Complete   | 2026-03-09 |
-| 4. Backend API + SSE Server | 1/2 | In Progress|  |
+| 4. Backend API + SSE Server | 2/2 | Complete   | 2026-03-10 |
 | 5. Frontend Dashboard | 0/3 | Not started | - |

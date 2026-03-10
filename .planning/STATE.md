@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: planning
-stopped_at: Completed 04-01-PLAN.md — REST endpoints + EventBus
-last_updated: "2026-03-10T03:47:42.110Z"
+stopped_at: "Completed 04-02-PLAN.md — SSE endpoint (checkpoint: awaiting human verify)"
+last_updated: "2026-03-10T04:04:42.034Z"
 last_activity: 2026-03-09 — Roadmap created
 progress:
   total_phases: 5
-  completed_phases: 3
+  completed_phases: 4
   total_plans: 8
-  completed_plans: 7
+  completed_plans: 8
   percent: 0
 ---
 
@@ -57,6 +57,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 03-fork-detection-live-monitoring P01 | 4m | 2 tasks | 3 files |
 | Phase 03-fork-detection-live-monitoring P02 | 8m | 3 tasks | 3 files |
 | Phase 04-backend-api-sse-server P01 | 5m | 2 tasks | 12 files |
+| Phase 04-backend-api-sse-server P02 | 25m | 1 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -87,6 +88,8 @@ Recent decisions affecting current work:
 - [Phase 04-backend-api-sse-server]: EventBus uses per-client asyncio.Queue: each SSE connection gets its own queue so a slow browser tab cannot steal events meant for other tabs
 - [Phase 04-backend-api-sse-server]: asyncio.run_coroutine_threadsafe is the only correct cross-thread queue API: asyncio.Queue is not thread-safe, direct put_nowait() from monitor thread would corrupt event loop state
 - [Phase 04-backend-api-sse-server]: event_bus.set_loop() called before thread start in lifespan: the event loop must be captured before background threads begin or notify() would have a None loop reference
+- [Phase 04-backend-api-sse-server]: 1-second inner timeout in SSE generator: enables responsive disconnect detection while 15-cycle counter preserves 15-second keepalive SLA
+- [Phase 04-backend-api-sse-server]: SSE tests bypass TestClient.stream(): use OpenAPI schema + route registry for content-type, asyncio.run() with AsyncMock Request for disconnect cleanup
 
 ### Pending Todos
 
@@ -100,6 +103,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-10T03:47:42.107Z
-Stopped at: Completed 04-01-PLAN.md — REST endpoints + EventBus
+Last session: 2026-03-10T04:04:42.032Z
+Stopped at: Completed 04-02-PLAN.md — SSE endpoint (checkpoint: awaiting human verify)
 Resume file: None

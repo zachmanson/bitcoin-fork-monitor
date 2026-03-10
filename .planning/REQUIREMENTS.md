@@ -28,7 +28,7 @@
 - [ ] **DASH-01**: User can view a live block feed showing the most recent blocks as they arrive, with fork events highlighted
 - [x] **DASH-02**: User can view a summary stats panel showing: total canonical blocks, total orphaned blocks, current stale rate, date of last fork
 - [ ] **DASH-03**: User can view a paginated fork event log showing: block height, date, orphaned block hash, canonical block hash, fork resolution time
-- [ ] **DASH-04**: Dashboard receives real-time updates via Server-Sent Events (SSE) without requiring a page refresh
+- [x] **DASH-04**: Dashboard receives real-time updates via Server-Sent Events (SSE) without requiring a page refresh
 
 ### Analytics
 
@@ -74,7 +74,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DASH-01 | Phase 5 | Pending |
 | DASH-02 | Phase 4 | Complete |
 | DASH-03 | Phase 5 | Pending |
-| DASH-04 | Phase 4 | Pending |
+| DASH-04 | Phase 4 | Complete |
 | ANAL-01 | Phase 5 | Pending |
 | ANAL-02 | Phase 5 | Pending |
 | ANAL-03 | Phase 5 | Pending |
