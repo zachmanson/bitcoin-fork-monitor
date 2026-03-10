@@ -29,7 +29,7 @@ time-series charts and era bar charts.
 from typing import Literal
 
 from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy import func
+from sqlalchemy import Integer, func
 from sqlmodel import Session, select
 
 from app.analytics import calculate_stale_rate
@@ -90,8 +90,8 @@ def stale_rate_over_time(
     rows = session.exec(
         select(
             period_expr.label("bucket"),
-            func.sum(Block.is_canonical.cast(int)).label("canonical"),
-            func.sum((~Block.is_canonical).cast(int)).label("orphaned"),
+            func.sum(Block.is_canonical.cast(Integer)).label("canonical"),
+            func.sum((~Block.is_canonical).cast(Integer)).label("orphaned"),
         )
         .group_by(period_expr)
         .order_by(period_expr)
@@ -150,8 +150,8 @@ def era_breakdown(session: Session = Depends(get_session)) -> list[dict]:
             era_expr,
             func.min(Block.height).label("height_start"),
             func.max(Block.height).label("height_end"),
-            func.sum(Block.is_canonical.cast(int)).label("canonical"),
-            func.sum((~Block.is_canonical).cast(int)).label("orphaned"),
+            func.sum(Block.is_canonical.cast(Integer)).label("canonical"),
+            func.sum((~Block.is_canonical).cast(Integer)).label("orphaned"),
         )
         .group_by(era_expr)
         .order_by(era_expr)

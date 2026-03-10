@@ -137,10 +137,13 @@
 
   {#if error}
     <p style="color: var(--accent-red)">{error}</p>
-  {:else}
-    <!-- bind:this captures the DOM reference Lightweight Charts needs -->
-    <div bind:this={container} style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px;"></div>
   {/if}
+  <!-- Container stays in DOM at all times so bind:this is never null.
+       Hidden via CSS when the error state is active. -->
+  <div
+    bind:this={container}
+    style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; {error ? 'display: none' : ''}"
+  ></div>
 </div>
 
 <style>
