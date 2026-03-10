@@ -1,6 +1,7 @@
 <script>
   import StatsPanel from '$lib/components/StatsPanel.svelte';
   import LiveFeed from '$lib/components/LiveFeed.svelte';
+  import ForkLog from '$lib/components/ForkLog.svelte';
 </script>
 
 <svelte:head>
@@ -21,7 +22,7 @@
 
   <section id="fork-log">
     <h2 class="section-heading">Fork Event Log</h2>
-    <p style="color: var(--text-secondary);">[ Fork event log — Plan 03 ]</p>
+    <ForkLog />
   </section>
 
   <section id="analytics">
