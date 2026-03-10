@@ -41,7 +41,7 @@ from app.database import create_db_and_tables, engine
 from app.events import event_bus
 from app.models import SyncState
 from app.monitor import run_monitor
-from app.routers import blocks, forks, stats
+from app.routers import blocks, events, forks, stats
 
 logger = logging.getLogger(__name__)
 
@@ -125,6 +125,7 @@ app = FastAPI(title="Bitcoin Fork Monitor", lifespan=lifespan)
 app.include_router(stats.router)
 app.include_router(forks.router)
 app.include_router(blocks.router)
+app.include_router(events.router)
 
 
 @app.get("/health")
