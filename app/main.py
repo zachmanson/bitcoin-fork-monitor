@@ -28,6 +28,7 @@ Why daemon=True?
   period, and then the process exits cleanly.
 """
 
+import asyncio
 import logging
 import threading
 from contextlib import asynccontextmanager
@@ -37,8 +38,10 @@ from sqlmodel import Session, select
 
 from app.backfill import run_backfill
 from app.database import create_db_and_tables, engine
+from app.events import event_bus
 from app.models import SyncState
 from app.monitor import run_monitor
+from app.routers import blocks, forks, stats
 
 logger = logging.getLogger(__name__)
 
@@ -58,6 +61,11 @@ async def lifespan(app: FastAPI):
 
     # Ensure all SQLModel tables exist. Safe to call on every restart.
     create_db_and_tables()
+
+    # Capture the event loop before threads start. The monitor thread calls
+    # event_bus.notify() which needs the loop reference to schedule coroutines
+    # thread-safely via asyncio.run_coroutine_threadsafe.
+    event_bus.set_loop(asyncio.get_event_loop())
 
     # Initialize thread references to None so the shutdown block always has a
     # valid reference, even if a thread was never launched (e.g., backfill skipped).
@@ -111,6 +119,12 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(title="Bitcoin Fork Monitor", lifespan=lifespan)
+
+# Register API routers. include_router() is the FastAPI way of mounting a group
+# of related endpoints — each router brings its own prefix ("/api") and OpenAPI tags.
+app.include_router(stats.router)
+app.include_router(forks.router)
+app.include_router(blocks.router)
 
 
 @app.get("/health")

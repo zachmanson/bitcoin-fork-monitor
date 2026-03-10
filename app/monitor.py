@@ -43,6 +43,7 @@ from app.api_client import (
     fetch_tip_height,
 )
 from app.database import engine
+from app.events import event_bus
 from app.fork_detector import detect_fork_at_height, write_fork_event
 from app.models import Block, ForkEvent, SyncState
 
@@ -145,6 +146,8 @@ def _process_block(session: Session, block_data: dict, pending_resolutions: list
         session.commit()
 
     # --- Fork detection ---
+    # Track competing_block here so it's available after the if-block below.
+    # We need it in the notify() call to report is_fork accurately.
     competing_block = detect_fork_at_height(session, height, block_hash)
 
     if competing_block is not None:
@@ -159,6 +162,15 @@ def _process_block(session: Session, block_data: dict, pending_resolutions: list
         state.updated_at = datetime.utcnow()
         session.add(state)
         session.commit()
+
+    # Broadcast to any SSE clients listening on /api/events. Thread-safe
+    # because EventBus.notify() uses run_coroutine_threadsafe under the hood.
+    event_bus.notify({
+        "type": "block",
+        "height": height,
+        "hash": block_hash,
+        "is_fork": competing_block is not None,
+    })
 
 
 def _handle_fork(
