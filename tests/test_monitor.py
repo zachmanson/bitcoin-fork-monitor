@@ -346,7 +346,7 @@ class TestGapFill:
 
         processed_heights = []
 
-        def record_height(sess, block_data, pending_resolutions):
+        def record_height(sess, block_data, **kwargs):
             processed_heights.append(block_data["height"])
 
         with patch("app.monitor.fetch_tip_height", return_value=tip), \
