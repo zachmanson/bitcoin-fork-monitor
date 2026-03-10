@@ -74,7 +74,7 @@ Plans:
   2. GET /api/forks returns a paginated list of fork events (block height, date, orphaned hash, canonical hash, resolution time)
   3. GET /api/blocks returns the most recent blocks with fork events highlighted
   4. GET /api/events (SSE) pushes a new event to connected clients within 2 seconds of a new block or fork being recorded
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
 - [ ] 04-01: FastAPI server with REST endpoints (/api/stats, /api/forks, /api/blocks)
@@ -90,12 +90,13 @@ Plans:
   3. The stale rate over time chart renders as a weekly or monthly aggregated trend line across the full blockchain history
   4. The era breakdown view shows stale rate by year or difficulty era, with a visible data confidence note for pre-2015 data
   5. The summary stats panel shows total canonical blocks, total orphaned blocks, current stale rate, and date of last fork — updating live via SSE
-**Plans**: TBD
+**Plans**: 4 plans
 
 Plans:
-- [ ] 05-01: SvelteKit SPA setup with live block feed and SSE connection
-- [ ] 05-02: Fork event log (paginated table) and summary stats panel
-- [ ] 05-03: Stale rate over time chart (Lightweight Charts v5) and era breakdown view with data confidence notes
+- [ ] 05-01-PLAN.md — Analytics backend endpoints + SvelteKit project scaffold with Vite proxy
+- [ ] 05-02-PLAN.md — Live block feed (SSE-driven) + summary stats panel
+- [ ] 05-03-PLAN.md — Fork event log (paginated table, copy-to-clipboard, resolution time)
+- [ ] 05-04-PLAN.md — Stale rate over time chart (Lightweight Charts v5) + era breakdown with data confidence annotation
 
 ## Progress
 
@@ -108,4 +109,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | 2. API Client + Backfill | 2/2 | Complete   | 2026-03-09 |
 | 3. Fork Detection + Live Monitoring | 2/2 | Complete   | 2026-03-09 |
 | 4. Backend API + SSE Server | 2/2 | Complete   | 2026-03-10 |
-| 5. Frontend Dashboard | 0/3 | Not started | - |
+| 5. Frontend Dashboard | 0/4 | Not started | - |
