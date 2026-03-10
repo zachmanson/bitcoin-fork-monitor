@@ -10,19 +10,41 @@
      The asterisk annotation makes this limitation visible in context. -->
 
 <script lang="ts">
-  import { onMount } from 'svelte';
+  import { onMount, onDestroy } from 'svelte';
   import { fetchEraBreakdown, type EraBreakdown } from '$lib/api';
   import { formatStaleRate } from '$lib/format';
+  import { sseManager } from '$lib/sse';
 
   let eras: EraBreakdown[] = [];
   let error: string | null = null;
 
-  onMount(async () => {
+  async function load() {
     try {
       eras = await fetchEraBreakdown();
+      error = null;
     } catch (e) {
       error = 'Failed to load era breakdown';
     }
+  }
+
+  // Debounce collapses rapid SSE bursts (backfill) into one reload
+  let debounceTimer: ReturnType<typeof setTimeout> | null = null;
+  function debouncedLoad() {
+    if (debounceTimer) clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(load, 10_000);
+  }
+
+  let unsubscribe: () => void;
+
+  onMount(() => {
+    load();
+    sseManager.connect();
+    unsubscribe = sseManager.subscribe(debouncedLoad);
+  });
+
+  onDestroy(() => {
+    unsubscribe?.();
+    if (debounceTimer) clearTimeout(debounceTimer);
   });
 </script>
 

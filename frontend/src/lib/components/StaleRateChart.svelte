@@ -15,6 +15,7 @@
   import { onMount, onDestroy } from 'svelte';
   import { createChart, LineSeries } from 'lightweight-charts';
   import { fetchStaleRateOverTime, type StaleRatePoint } from '$lib/api';
+  import { sseManager } from '$lib/sse';
 
   // period is the current toggle state
   let period: 'weekly' | 'monthly' = 'monthly';
@@ -62,6 +63,16 @@
     }
   }
 
+  // Debounce: collapse rapid SSE bursts (e.g. during backfill) into one reload.
+  // Without this, each incoming block during backfill would trigger a full table scan.
+  let debounceTimer: ReturnType<typeof setTimeout> | null = null;
+  function debouncedLoad() {
+    if (debounceTimer) clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(load, 10_000);
+  }
+
+  let unsubscribe: () => void;
+
   onMount(() => {
     // createChart() attaches to the container div and returns a chart instance.
     // The options configure the visual appearance — dark theme to match the dashboard.
@@ -100,6 +111,9 @@
 
     load();
 
+    sseManager.connect();
+    unsubscribe = sseManager.subscribe(debouncedLoad);
+
     // Resize chart when window size changes
     const observer = new ResizeObserver(() => {
       chart?.applyOptions({ width: container.clientWidth });
@@ -110,6 +124,8 @@
   });
 
   onDestroy(() => {
+    unsubscribe?.();
+    if (debounceTimer) clearTimeout(debounceTimer);
     chart?.remove();  // important: clean up the WebGL canvas
   });
 
