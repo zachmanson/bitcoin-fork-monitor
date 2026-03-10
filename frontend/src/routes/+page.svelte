@@ -2,6 +2,8 @@
   import StatsPanel from '$lib/components/StatsPanel.svelte';
   import LiveFeed from '$lib/components/LiveFeed.svelte';
   import ForkLog from '$lib/components/ForkLog.svelte';
+  import StaleRateChart from '$lib/components/StaleRateChart.svelte';
+  import EraBreakdown from '$lib/components/EraBreakdown.svelte';
 </script>
 
 <svelte:head>
@@ -26,8 +28,11 @@
   </section>
 
   <section id="analytics">
-    <h2 class="section-heading">Analytics</h2>
-    <p style="color: var(--text-secondary);">[ Charts — Plan 04 ]</p>
+    <h2 class="section-heading">Stale Rate Over Time</h2>
+    <StaleRateChart />
+
+    <h2 class="section-heading" style="margin-top: 2.5rem;">Era Breakdown</h2>
+    <EraBreakdown />
   </section>
 
 </div>
