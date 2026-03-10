@@ -16,7 +16,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 2: API Client + Backfill** - Rate-limited mempool.space client and checkpointed full history backfill (completed 2026-03-09)
 - [x] **Phase 3: Fork Detection + Live Monitoring** - Height-collision fork detection, WebSocket poller with REST fallback, gap-fill on reconnect (completed 2026-03-09)
 - [x] **Phase 4: Backend API + SSE Server** - FastAPI HTTP/SSE server exposing block and fork data with real-time push (completed 2026-03-10)
-- [ ] **Phase 5: Frontend Dashboard** - SvelteKit SPA with live block feed, fork event log, stale rate chart, and summary stats
+- [x] **Phase 5: Frontend Dashboard** - SvelteKit SPA with live block feed, fork event log, stale rate chart, and summary stats (completed 2026-03-10)
 
 ## Phase Details
 
@@ -109,4 +109,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | 2. API Client + Backfill | 2/2 | Complete   | 2026-03-09 |
 | 3. Fork Detection + Live Monitoring | 2/2 | Complete   | 2026-03-09 |
 | 4. Backend API + SSE Server | 2/2 | Complete   | 2026-03-10 |
-| 5. Frontend Dashboard | 2/4 | In Progress|  |
+| 5. Frontend Dashboard | 4/4 | Complete   | 2026-03-10 |
