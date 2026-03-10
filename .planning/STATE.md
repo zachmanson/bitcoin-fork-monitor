@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: planning
-stopped_at: Completed 05-01-PLAN.md
-last_updated: "2026-03-10T16:12:12.343Z"
+stopped_at: "Completed 05-02 auto tasks — awaiting checkpoint:human-verify"
+last_updated: "2026-03-10T16:17:28.307Z"
 last_activity: 2026-03-09 — Roadmap created
 progress:
   total_phases: 5
   completed_phases: 4
   total_plans: 12
-  completed_plans: 9
+  completed_plans: 10
   percent: 0
 ---
 
@@ -59,6 +59,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 04-backend-api-sse-server P01 | 5m | 2 tasks | 12 files |
 | Phase 04-backend-api-sse-server P02 | 25m | 1 tasks | 3 files |
 | Phase 05-frontend-dashboard P01 | 15m | 2 tasks | 10 files |
+| Phase 05-frontend-dashboard P02 | 20m | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -95,6 +96,8 @@ Recent decisions affecting current work:
 - [Phase 05-frontend-dashboard]: low_confidence flag for eras below height 321000 (pre-2015 orphan data less reliable)
 - [Phase 05-frontend-dashboard]: vite bumped from ^5 to ^6 to satisfy @sveltejs/vite-plugin-svelte peer dependency in SvelteKit 2.53.4
 - [Phase 05-frontend-dashboard]: src/app.html added (not in plan) — required SvelteKit root template
+- [Phase 05-frontend-dashboard]: Singleton SseManager: one EventSource for the whole app; components subscribe via callback set
+- [Phase 05-frontend-dashboard]: Full list replace on SSE update in LiveFeed: handles re-orgs correctly without prepend logic
 
 ### Pending Todos
 
@@ -108,6 +111,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-10T16:12:12.340Z
-Stopped at: Completed 05-01-PLAN.md
+Last session: 2026-03-10T16:17:28.297Z
+Stopped at: Completed 05-02 auto tasks — awaiting checkpoint:human-verify
 Resume file: None
