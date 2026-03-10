@@ -41,7 +41,7 @@ from app.database import create_db_and_tables, engine
 from app.events import event_bus
 from app.models import SyncState
 from app.monitor import run_monitor
-from app.routers import blocks, events, forks, stats
+from app.routers import analytics, blocks, events, forks, stats
 
 logger = logging.getLogger(__name__)
 
@@ -126,6 +126,7 @@ app.include_router(stats.router)
 app.include_router(forks.router)
 app.include_router(blocks.router)
 app.include_router(events.router)
+app.include_router(analytics.router)
 
 
 @app.get("/health")
