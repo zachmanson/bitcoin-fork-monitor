@@ -133,6 +133,14 @@ def main() -> None:
                     print(f"  [WARN] height {height}: couldn't find canonical hash, skipping")
                     continue
 
+                # Data quality guard: CSV occasionally lists a block as orphaned
+                # that is actually the canonical block at that height (e.g. after a reorg
+                # flipped which chain won). Skip these — they're not real orphans.
+                if canonical_hash == orphan_hash:
+                    print(f"  [SKIP] height {height}: orphan hash matches canonical — stale CSV entry")
+                    skipped += 1
+                    continue
+
                 # Insert canonical Block if not already in DB (can happen for heights
                 # the backfill hasn't reached yet — we store a placeholder so the
                 # ForkEvent foreign reference is consistent)

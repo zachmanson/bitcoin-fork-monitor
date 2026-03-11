@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+env/
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Environment
+.env
+.env.*
+
+# Claude Code local config
+.claude/
+
+# Node / frontend
+node_modules/
+frontend/.svelte-kit/
+frontend/build/
+
+# OS
+.DS_Store
+Thumbs.db
