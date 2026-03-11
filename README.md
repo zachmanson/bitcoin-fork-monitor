@@ -52,12 +52,20 @@ The API will be at `http://localhost:8000` and the dashboard at `http://localhos
 
 ---
 
-## Seeding historical orphan data
+## Backfill and historical data
 
-A CSV of known historical orphaned blocks can be imported with:
+When you first run the app, it will automatically begin backfilling block history from the [mempool.space](https://mempool.space) public API. This works by fetching blocks page by page and recording any heights where two different block hashes existed — those are forks.
+
+**This takes a while.** The Bitcoin chain is ~880,000 blocks deep. The backfill is throttled to be respectful of the API, so expect it to run in the background for several hours before the database is fully populated. The app is usable while it runs — the dashboard will show data as it comes in.
+
+Progress is checkpointed, so if you restart the server the backfill resumes from where it left off.
+
+### Seeding known historical orphans (faster start)
+
+For a quicker way to populate fork events, you can seed from a crowd-sourced dataset of known stale blocks (~2,000 orphans going back to 2011):
 
 ```bash
 python seed_stale_blocks.py
 ```
 
-This populates the database with real historical fork events so the dashboard has data to display immediately.
+This downloads a CSV from [bitcoin-data/stale-blocks](https://github.com/bitcoin-data/stale-blocks) and imports it directly. Run it once the backfill has made some progress (so canonical block hashes are available in the DB). It's safe to re-run — all inserts are guarded against duplicates.
